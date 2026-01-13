@@ -1,5 +1,5 @@
 //
-//  CalendarViewModel.swift
+//  DayScheduleViewModel.swift
 //  ScheduleBot
 //
 //  Created by Fernando Olivares on 13/01/26.
@@ -32,7 +32,7 @@ struct SelectedSlot {
     let endTime: Date
 }
 
-final class CalendarViewModel {
+final class DayScheduleViewModel {
 
     private let calendarService: CalendarService
     private let dayBuilder = DayBuilder()

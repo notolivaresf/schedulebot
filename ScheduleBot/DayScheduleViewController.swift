@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  DayScheduleViewController.swift
 //  ScheduleBot
 //
 //  Created by Fernando Olivares on 13/01/26.
@@ -7,9 +7,9 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class DayScheduleViewController: UIViewController {
 
-    private let viewModel = CalendarViewModel()
+    private let viewModel = DayScheduleViewModel()
     private let highlightColor: UIColor
     private var shareButton: UIBarButtonItem!
 
@@ -135,7 +135,7 @@ class ViewController: UIViewController {
 
 // MARK: - UITableViewDataSource
 
-extension ViewController: UITableViewDataSource {
+extension DayScheduleViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         viewModel.timeSlots.count
@@ -155,7 +155,7 @@ extension ViewController: UITableViewDataSource {
 
 // MARK: - UITableViewDelegate
 
-extension ViewController: UITableViewDelegate {
+extension DayScheduleViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         viewModel.toggleSelection(at: indexPath.row)
