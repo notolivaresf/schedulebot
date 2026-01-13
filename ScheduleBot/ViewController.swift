@@ -10,6 +10,18 @@ import UIKit
 class ViewController: UIViewController {
 
     private let viewModel = CalendarViewModel()
+    private let highlightColor: UIColor
+    private var selectedSlotIndices: Set<Int> = []
+
+    init(highlightColor: UIColor = .systemBlue) {
+        self.highlightColor = highlightColor
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        self.highlightColor = .systemBlue
+        super.init(coder: coder)
+    }
 
     private let tableView: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
@@ -70,12 +82,14 @@ class ViewController: UIViewController {
 
         tableView.register(TimeSlotCell.self, forCellReuseIdentifier: TimeSlotCell.reuseIdentifier)
         tableView.dataSource = self
+        tableView.delegate = self
     }
 
     private func bindViewModel() {
         viewModel.onUpdate = { [weak self] in
             guard let self = self else { return }
             self.title = self.dateFormatter.string(from: self.viewModel.currentDate)
+            self.selectedSlotIndices.removeAll()
             self.tableView.reloadData()
         }
     }
@@ -93,7 +107,28 @@ extension ViewController: UITableViewDataSource {
         }
 
         let slot = viewModel.timeSlots[indexPath.row]
-        cell.configure(with: slot)
+        let isSelected = selectedSlotIndices.contains(indexPath.row)
+        cell.configure(with: slot, isSelected: isSelected, highlightColor: highlightColor)
         return cell
+    }
+}
+
+extension ViewController: UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let slot = viewModel.timeSlots[indexPath.row]
+
+        // Only allow selection of available slots
+        guard case .available = slot.content else { return }
+
+        // Toggle selection
+        if selectedSlotIndices.contains(indexPath.row) {
+            selectedSlotIndices.remove(indexPath.row)
+        } else {
+            selectedSlotIndices.insert(indexPath.row)
+        }
+
+        // Reload the cell to update its appearance
+        tableView.reloadRows(at: [indexPath], with: .none)
     }
 }

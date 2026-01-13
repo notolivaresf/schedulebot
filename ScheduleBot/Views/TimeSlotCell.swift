@@ -33,6 +33,15 @@ final class TimeSlotCell: UITableViewCell {
         return view
     }()
 
+    private let checkmarkImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "checkmark.circle.fill")
+        imageView.tintColor = .systemBlue
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.isHidden = true
+        return imageView
+    }()
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
@@ -43,9 +52,12 @@ final class TimeSlotCell: UITableViewCell {
     }
 
     private func setupViews() {
+        selectionStyle = .none
+
         contentView.addSubview(timeLabel)
         contentView.addSubview(colorIndicator)
         contentView.addSubview(contentLabel)
+        contentView.addSubview(checkmarkImageView)
 
         NSLayoutConstraint.activate([
             timeLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
@@ -58,42 +70,61 @@ final class TimeSlotCell: UITableViewCell {
             colorIndicator.heightAnchor.constraint(equalToConstant: 8),
 
             contentLabel.leadingAnchor.constraint(equalTo: colorIndicator.trailingAnchor, constant: 8),
-            contentLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            contentLabel.trailingAnchor.constraint(equalTo: checkmarkImageView.leadingAnchor, constant: -8),
             contentLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+
+            checkmarkImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            checkmarkImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            checkmarkImageView.widthAnchor.constraint(equalToConstant: 24),
+            checkmarkImageView.heightAnchor.constraint(equalToConstant: 24),
         ])
     }
 
-    func configure(with slot: TimeSlot) {
+    func configure(with slot: TimeSlot, isSelected: Bool = false, highlightColor: UIColor = .systemBlue) {
         timeLabel.text = slot.timeString
 
         switch slot.content {
         case .available:
-            contentLabel.text = "Available"
-            contentLabel.textColor = .tertiaryLabel
-            colorIndicator.backgroundColor = .clear
-            contentView.backgroundColor = .systemBackground
+            if isSelected {
+                contentLabel.text = "Selected"
+                contentLabel.textColor = .label
+                colorIndicator.backgroundColor = highlightColor
+                contentView.backgroundColor = highlightColor.withAlphaComponent(0.15)
+                checkmarkImageView.isHidden = false
+                checkmarkImageView.tintColor = highlightColor
+            } else {
+                contentLabel.text = "Available"
+                contentLabel.textColor = .tertiaryLabel
+                colorIndicator.backgroundColor = .clear
+                contentView.backgroundColor = .systemBackground
+                checkmarkImageView.isHidden = true
+            }
 
         case .event(let event, _):
             contentLabel.text = event.title
             contentLabel.textColor = .label
             colorIndicator.backgroundColor = event.calendarColor
             contentView.backgroundColor = .secondarySystemBackground
+            checkmarkImageView.isHidden = true
 
         case .eventContinuation:
             contentLabel.text = ""
             colorIndicator.backgroundColor = .clear
             contentView.backgroundColor = .secondarySystemBackground
+            checkmarkImageView.isHidden = true
 
         case .bundled(let count, _):
             contentLabel.text = "(\(count) events)"
             contentLabel.textColor = .label
             colorIndicator.backgroundColor = .systemOrange
             contentView.backgroundColor = .secondarySystemBackground
+            checkmarkImageView.isHidden = true
 
         case .bundledContinuation:
             contentLabel.text = ""
             colorIndicator.backgroundColor = .clear
             contentView.backgroundColor = .secondarySystemBackground
+            checkmarkImageView.isHidden = true
         }
     }
 
@@ -103,5 +134,6 @@ final class TimeSlotCell: UITableViewCell {
         contentLabel.text = nil
         colorIndicator.backgroundColor = .clear
         contentView.backgroundColor = .systemBackground
+        checkmarkImageView.isHidden = true
     }
 }
