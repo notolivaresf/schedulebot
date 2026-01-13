@@ -7,56 +7,58 @@
 
 import SwiftUI
 
-struct DateSelection: Identifiable {
-    let id: Date
+struct SlotChipData: Identifiable {
+    let id: String
     let date: Date
-    let slotCount: Int
+    let startTime: Date
+    let endTime: Date
 
-    var formattedDate: String {
-        Self.formatter.string(from: date)
+    var formattedLabel: String {
+        "\(Self.dateFormatter.string(from: date)) \(Self.timeFormatter.string(from: startTime))"
     }
 
-    private static let formatter: DateFormatter = {
+    private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM d"
         return formatter
     }()
+
+    private static let timeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h:mm a"
+        return formatter
+    }()
 }
 
-struct SelectedDateChip: View {
-    let selection: DateSelection
+struct SelectedSlotChip: View {
+    let slot: SlotChipData
     let color: Color
 
     var body: some View {
-        HStack(spacing: 4) {
-            Text(selection.formattedDate)
-                .font(.subheadline)
-                .fontWeight(.medium)
-            Text("(\(selection.slotCount))")
-                .font(.caption)
-                .foregroundColor(.secondary)
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
-        .background(color.opacity(0.15))
-        .foregroundColor(color)
-        .clipShape(Capsule())
-        .overlay(
-            Capsule()
-                .stroke(color.opacity(0.3), lineWidth: 1)
-        )
+        Text(slot.formattedLabel)
+            .font(.subheadline)
+            .fontWeight(.medium)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(color.opacity(0.15))
+            .foregroundColor(color)
+            .clipShape(Capsule())
+            .overlay(
+                Capsule()
+                    .stroke(color.opacity(0.3), lineWidth: 1)
+            )
     }
 }
 
-struct SelectedDatesFooterView: View {
-    let selections: [DateSelection]
+struct SelectedSlotsFooterView: View {
+    let slots: [SlotChipData]
     let highlightColor: Color
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                ForEach(selections) { selection in
-                    SelectedDateChip(selection: selection, color: highlightColor)
+                ForEach(slots) { slot in
+                    SelectedSlotChip(slot: slot, color: highlightColor)
                 }
             }
             .padding(.horizontal, 16)
@@ -69,11 +71,11 @@ struct SelectedDatesFooterView: View {
 #Preview {
     VStack {
         Spacer()
-        SelectedDatesFooterView(
-            selections: [
-                DateSelection(id: Date(), date: Date(), slotCount: 3),
-                DateSelection(id: Date().addingTimeInterval(86400), date: Date().addingTimeInterval(86400), slotCount: 2),
-                DateSelection(id: Date().addingTimeInterval(172800), date: Date().addingTimeInterval(172800), slotCount: 5)
+        SelectedSlotsFooterView(
+            slots: [
+                SlotChipData(id: "1", date: Date(), startTime: Date(), endTime: Date().addingTimeInterval(1800)),
+                SlotChipData(id: "2", date: Date(), startTime: Date().addingTimeInterval(1800), endTime: Date().addingTimeInterval(3600)),
+                SlotChipData(id: "3", date: Date().addingTimeInterval(86400), startTime: Date().addingTimeInterval(86400), endTime: Date().addingTimeInterval(86400 + 1800))
             ],
             highlightColor: .blue
         )

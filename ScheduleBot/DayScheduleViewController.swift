@@ -21,7 +21,7 @@ class DayScheduleViewController: UIViewController {
         return table
     }()
 
-    private var footerHostingController: UIHostingController<SelectedDatesFooterView>?
+    private var footerHostingController: UIHostingController<SelectedSlotsFooterView>?
     private var footerHeightConstraint: NSLayoutConstraint?
 
     // MARK: - Initialization
@@ -82,8 +82,8 @@ class DayScheduleViewController: UIViewController {
     }
 
     private func setupFooter() {
-        let footerView = SelectedDatesFooterView(
-            selections: [],
+        let footerView = SelectedSlotsFooterView(
+            slots: [],
             highlightColor: Color(highlightColor)
         )
         let hostingController = UIHostingController(rootView: footerView)
@@ -124,11 +124,11 @@ class DayScheduleViewController: UIViewController {
     }
 
     private func updateFooter() {
-        let selections = viewModel.groupedSelections()
-        let hasSelections = !selections.isEmpty
+        let slots = viewModel.slotChipData()
+        let hasSelections = !slots.isEmpty
 
-        footerHostingController?.rootView = SelectedDatesFooterView(
-            selections: selections,
+        footerHostingController?.rootView = SelectedSlotsFooterView(
+            slots: slots,
             highlightColor: Color(highlightColor)
         )
 

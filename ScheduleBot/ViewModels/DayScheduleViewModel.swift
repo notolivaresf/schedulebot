@@ -98,11 +98,15 @@ final class DayScheduleViewModel {
         return result
     }
 
-    func groupedSelections() -> [DateSelection] {
-        selectedSlotsByDate
-            .filter { !$0.value.isEmpty }
-            .sorted { $0.key < $1.key }
-            .map { DateSelection(id: $0.key, date: $0.key, slotCount: $0.value.count) }
+    func slotChipData() -> [SlotChipData] {
+        allSelectedSlots().map { slot in
+            SlotChipData(
+                id: "\(slot.date.timeIntervalSince1970)-\(slot.slotIndex)",
+                date: slot.date,
+                startTime: slot.startTime,
+                endTime: slot.endTime
+            )
+        }
     }
 
     // MARK: - Navigation
