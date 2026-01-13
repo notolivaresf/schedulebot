@@ -133,7 +133,15 @@ class ViewController: UIViewController {
             self.title = self.dateFormatter.string(from: self.viewModel.currentDate)
             self.tableView.reloadData()
             self.updateShareButtonState()
+            self.scrollToDefaultTime()
         }
+    }
+
+    private func scrollToDefaultTime() {
+        let eightAMSlotIndex = 16 // 8 hours × 2 slots per hour
+        guard eightAMSlotIndex < viewModel.timeSlots.count else { return }
+        let indexPath = IndexPath(row: eightAMSlotIndex, section: 0)
+        tableView.scrollToRow(at: indexPath, at: .top, animated: false)
     }
 }
 
