@@ -18,6 +18,12 @@ class ViewController: UIViewController {
         return table
     }()
 
+    private let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .full
+        return formatter
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
@@ -41,7 +47,9 @@ class ViewController: UIViewController {
 
     private func bindViewModel() {
         viewModel.onUpdate = { [weak self] in
-            self?.tableView.reloadData()
+            guard let self = self else { return }
+            self.title = self.dateFormatter.string(from: self.viewModel.currentDate)
+            self.tableView.reloadData()
         }
     }
 }
