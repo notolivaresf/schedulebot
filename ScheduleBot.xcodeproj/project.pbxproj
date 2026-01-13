@@ -7,19 +7,32 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		9BDA9D9F2F16EAFC000DDDB2 /* ScheduleBot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScheduleBot.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9BDE605A2F16F2A300037650 /* ScheduleBot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScheduleBot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		9BDE606C2F16F2A400037650 /* Exceptions for "ScheduleBot" folder in "ScheduleBot" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 9BDE60592F16F2A300037650 /* ScheduleBot */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		9BDA9DA12F16EAFC000DDDB2 /* ScheduleBot */ = {
+		9BDE605C2F16F2A300037650 /* ScheduleBot */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				9BDE606C2F16F2A400037650 /* Exceptions for "ScheduleBot" folder in "ScheduleBot" target */,
+			);
 			path = ScheduleBot;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		9BDA9D9C2F16EAFC000DDDB2 /* Frameworks */ = {
+		9BDE60572F16F2A300037650 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -29,18 +42,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		9BDA9D962F16EAFC000DDDB2 = {
+		9BDE60512F16F2A300037650 = {
 			isa = PBXGroup;
 			children = (
-				9BDA9DA12F16EAFC000DDDB2 /* ScheduleBot */,
-				9BDA9DA02F16EAFC000DDDB2 /* Products */,
+				9BDE605C2F16F2A300037650 /* ScheduleBot */,
+				9BDE605B2F16F2A300037650 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		9BDA9DA02F16EAFC000DDDB2 /* Products */ = {
+		9BDE605B2F16F2A300037650 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9BDA9D9F2F16EAFC000DDDB2 /* ScheduleBot.app */,
+				9BDE605A2F16F2A300037650 /* ScheduleBot.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,64 +61,64 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		9BDA9D9E2F16EAFC000DDDB2 /* ScheduleBot */ = {
+		9BDE60592F16F2A300037650 /* ScheduleBot */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9BDA9DAE2F16EAFD000DDDB2 /* Build configuration list for PBXNativeTarget "ScheduleBot" */;
+			buildConfigurationList = 9BDE606D2F16F2A400037650 /* Build configuration list for PBXNativeTarget "ScheduleBot" */;
 			buildPhases = (
-				9BDA9D9B2F16EAFC000DDDB2 /* Sources */,
-				9BDA9D9C2F16EAFC000DDDB2 /* Frameworks */,
-				9BDA9D9D2F16EAFC000DDDB2 /* Resources */,
+				9BDE60562F16F2A300037650 /* Sources */,
+				9BDE60572F16F2A300037650 /* Frameworks */,
+				9BDE60582F16F2A300037650 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				9BDA9DA12F16EAFC000DDDB2 /* ScheduleBot */,
+				9BDE605C2F16F2A300037650 /* ScheduleBot */,
 			);
 			name = ScheduleBot;
 			packageProductDependencies = (
 			);
 			productName = ScheduleBot;
-			productReference = 9BDA9D9F2F16EAFC000DDDB2 /* ScheduleBot.app */;
+			productReference = 9BDE605A2F16F2A300037650 /* ScheduleBot.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		9BDA9D972F16EAFC000DDDB2 /* Project object */ = {
+		9BDE60522F16F2A300037650 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1620;
 				LastUpgradeCheck = 1620;
 				TargetAttributes = {
-					9BDA9D9E2F16EAFC000DDDB2 = {
+					9BDE60592F16F2A300037650 = {
 						CreatedOnToolsVersion = 16.2;
 					};
 				};
 			};
-			buildConfigurationList = 9BDA9D9A2F16EAFC000DDDB2 /* Build configuration list for PBXProject "ScheduleBot" */;
+			buildConfigurationList = 9BDE60552F16F2A300037650 /* Build configuration list for PBXProject "ScheduleBot" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = 9BDA9D962F16EAFC000DDDB2;
+			mainGroup = 9BDE60512F16F2A300037650;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 9BDA9DA02F16EAFC000DDDB2 /* Products */;
+			productRefGroup = 9BDE605B2F16F2A300037650 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				9BDA9D9E2F16EAFC000DDDB2 /* ScheduleBot */,
+				9BDE60592F16F2A300037650 /* ScheduleBot */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		9BDA9D9D2F16EAFC000DDDB2 /* Resources */ = {
+		9BDE60582F16F2A300037650 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -115,7 +128,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		9BDA9D9B2F16EAFC000DDDB2 /* Sources */ = {
+		9BDE60562F16F2A300037650 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -125,7 +138,65 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		9BDA9DAC2F16EAFD000DDDB2 /* Debug */ = {
+		9BDE606E2F16F2A400037650 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JZD68QLF3J;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ScheduleBot/Info.plist;
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "ScheduleBot needs calendar access to display your events.";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.olivaresf.ScheduleBot;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9BDE606F2F16F2A400037650 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JZD68QLF3J;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ScheduleBot/Info.plist;
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "ScheduleBot needs calendar access to display your events.";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.olivaresf.ScheduleBot;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		9BDE60702F16F2A400037650 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -177,7 +248,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -188,7 +259,7 @@
 			};
 			name = Debug;
 		};
-		9BDA9DAD2F16EAFD000DDDB2 /* Release */ = {
+		9BDE60712F16F2A400037650 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -234,97 +305,38 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
-			};
-			name = Release;
-		};
-		9BDA9DAF2F16EAFD000DDDB2 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = JZD68QLF3J;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "ScheduleBot needs calendar access to display your events.";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				"INFOPLIST_KEY_UISceneDelegateClassName" = "$(PRODUCT_MODULE_NAME).SceneDelegate";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.olivaresf.ScheduleBot;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		9BDA9DB02F16EAFD000DDDB2 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = JZD68QLF3J;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "ScheduleBot needs calendar access to display your events.";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				"INFOPLIST_KEY_UISceneDelegateClassName" = "$(PRODUCT_MODULE_NAME).SceneDelegate";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.olivaresf.ScheduleBot;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		9BDA9D9A2F16EAFC000DDDB2 /* Build configuration list for PBXProject "ScheduleBot" */ = {
+		9BDE60552F16F2A300037650 /* Build configuration list for PBXProject "ScheduleBot" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				9BDA9DAC2F16EAFD000DDDB2 /* Debug */,
-				9BDA9DAD2F16EAFD000DDDB2 /* Release */,
+				9BDE60702F16F2A400037650 /* Debug */,
+				9BDE60712F16F2A400037650 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9BDA9DAE2F16EAFD000DDDB2 /* Build configuration list for PBXNativeTarget "ScheduleBot" */ = {
+		9BDE606D2F16F2A400037650 /* Build configuration list for PBXNativeTarget "ScheduleBot" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				9BDA9DAF2F16EAFD000DDDB2 /* Debug */,
-				9BDA9DB02F16EAFD000DDDB2 /* Release */,
+				9BDE606E2F16F2A400037650 /* Debug */,
+				9BDE606F2F16F2A400037650 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 9BDA9D972F16EAFC000DDDB2 /* Project object */;
+	rootObject = 9BDE60522F16F2A300037650 /* Project object */;
 }
