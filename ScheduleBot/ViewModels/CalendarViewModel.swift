@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum LoadingState: CustomStringConvertible {
+enum LoadingState: CustomStringConvertible, Equatable {
     case idle
     case loading
     case loaded
