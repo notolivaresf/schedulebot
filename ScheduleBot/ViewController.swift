@@ -11,17 +11,16 @@ class ViewController: UIViewController {
 
     private let viewModel = CalendarViewModel()
     private let highlightColor: UIColor
-    private var selectedSlotsByDate: [Date: Set<Int>] = [:]
     private var shareButton: UIBarButtonItem!
 
-    private var currentDayKey: Date {
-        Calendar.current.startOfDay(for: viewModel.currentDate)
-    }
+    private let tableView: UITableView = {
+        let table = UITableView(frame: .zero, style: .plain)
+        table.translatesAutoresizingMaskIntoConstraints = false
+        table.rowHeight = 44
+        return table
+    }()
 
-    private var currentDaySelections: Set<Int> {
-        get { selectedSlotsByDate[currentDayKey] ?? [] }
-        set { selectedSlotsByDate[currentDayKey] = newValue }
-    }
+    // MARK: - Initialization
 
     init(highlightColor: UIColor = .systemBlue) {
         self.highlightColor = highlightColor
@@ -33,18 +32,7 @@ class ViewController: UIViewController {
         super.init(coder: coder)
     }
 
-    private let tableView: UITableView = {
-        let table = UITableView(frame: .zero, style: .plain)
-        table.translatesAutoresizingMaskIntoConstraints = false
-        table.rowHeight = 44
-        return table
-    }()
-
-    private let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .full
-        return formatter
-    }()
+    // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,6 +41,8 @@ class ViewController: UIViewController {
         bindViewModel()
         viewModel.loadDay(Date())
     }
+
+    // MARK: - Setup
 
     private func setupNavigationBar() {
         let previousButton = UIBarButtonItem(
@@ -79,39 +69,6 @@ class ViewController: UIViewController {
         navigationItem.rightBarButtonItem = shareButton
     }
 
-    @objc private func previousDayTapped() {
-        let previousDay = Calendar.current.date(byAdding: .day, value: -1, to: viewModel.currentDate)!
-        viewModel.loadDay(previousDay)
-    }
-
-    @objc private func nextDayTapped() {
-        let nextDay = Calendar.current.date(byAdding: .day, value: 1, to: viewModel.currentDate)!
-        viewModel.loadDay(nextDay)
-    }
-
-    @objc private func shareTapped() {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-
-        print("Selected slots:")
-        for (date, slotIndices) in selectedSlotsByDate.sorted(by: { $0.key < $1.key }) {
-            guard !slotIndices.isEmpty else { continue }
-            print("  \(dateFormatter.string(from: date)):")
-            for index in slotIndices.sorted() {
-                let slotStart = date.addingTimeInterval(Double(index) * 30 * 60)
-                let slotEnd = slotStart.addingTimeInterval(30 * 60)
-                let timeFormatter = DateFormatter()
-                timeFormatter.timeStyle = .short
-                print("    \(timeFormatter.string(from: slotStart)) - \(timeFormatter.string(from: slotEnd))")
-            }
-        }
-    }
-
-    private func updateShareButtonState() {
-        let hasAnySelection = selectedSlotsByDate.values.contains { !$0.isEmpty }
-        shareButton.isEnabled = hasAnySelection
-    }
-
     private func setupTableView() {
         view.addSubview(tableView)
 
@@ -129,26 +86,59 @@ class ViewController: UIViewController {
 
     private func bindViewModel() {
         viewModel.onUpdate = { [weak self] in
-            guard let self = self else { return }
-            self.title = self.dateFormatter.string(from: self.viewModel.currentDate)
-            self.tableView.reloadData()
-            self.updateShareButtonState()
-            self.scrollToDefaultTime()
+            guard let self else { return }
+            title = viewModel.formattedTitle
+            shareButton.isEnabled = viewModel.hasAnySelection
+            tableView.reloadData()
+            scrollToDefaultTime()
         }
     }
 
     private func scrollToDefaultTime() {
-        let eightAMSlotIndex = 16 // 8 hours × 2 slots per hour
+        let eightAMSlotIndex = 16
         guard eightAMSlotIndex < viewModel.timeSlots.count else { return }
-        let indexPath = IndexPath(row: eightAMSlotIndex, section: 0)
-        tableView.scrollToRow(at: indexPath, at: .top, animated: false)
+        tableView.scrollToRow(at: IndexPath(row: eightAMSlotIndex, section: 0), at: .top, animated: false)
+    }
+
+    // MARK: - Actions
+
+    @objc private func previousDayTapped() {
+        viewModel.goToPreviousDay()
+    }
+
+    @objc private func nextDayTapped() {
+        viewModel.goToNextDay()
+    }
+
+    @objc private func shareTapped() {
+        let selectedSlots = viewModel.allSelectedSlots()
+        printSelectedSlots(selectedSlots)
+    }
+
+    private func printSelectedSlots(_ slots: [SelectedSlot]) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        let timeFormatter = DateFormatter()
+        timeFormatter.timeStyle = .short
+
+        print("Selected slots:")
+        var currentDate: Date?
+        for slot in slots {
+            if slot.date != currentDate {
+                currentDate = slot.date
+                print("  \(dateFormatter.string(from: slot.date)):")
+            }
+            print("    \(timeFormatter.string(from: slot.startTime)) - \(timeFormatter.string(from: slot.endTime))")
+        }
     }
 }
+
+// MARK: - UITableViewDataSource
 
 extension ViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.timeSlots.count
+        viewModel.timeSlots.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -157,31 +147,19 @@ extension ViewController: UITableViewDataSource {
         }
 
         let slot = viewModel.timeSlots[indexPath.row]
-        let isSelected = currentDaySelections.contains(indexPath.row)
+        let isSelected = viewModel.isSlotSelected(at: indexPath.row)
         cell.configure(with: slot, isSelected: isSelected, highlightColor: highlightColor)
         return cell
     }
 }
 
+// MARK: - UITableViewDelegate
+
 extension ViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let slot = viewModel.timeSlots[indexPath.row]
-
-        // Only allow selection of available slots
-        guard case .available = slot.content else { return }
-
-        // Toggle selection
-        var selections = currentDaySelections
-        if selections.contains(indexPath.row) {
-            selections.remove(indexPath.row)
-        } else {
-            selections.insert(indexPath.row)
-        }
-        currentDaySelections = selections
-
-        // Reload the cell to update its appearance
+        viewModel.toggleSelection(at: indexPath.row)
         tableView.reloadRows(at: [indexPath], with: .none)
-        updateShareButtonState()
+        shareButton.isEnabled = viewModel.hasAnySelection
     }
 }
