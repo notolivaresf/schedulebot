@@ -28,19 +28,22 @@ enum LoadingState: CustomStringConvertible, Equatable {
 final class CalendarViewModel {
 
     private let calendarService: CalendarService
+    private let dayBuilder = DayBuilder()
 
-    private(set) var events: [CalendarEvent] = []
+    private(set) var timeSlots: [TimeSlot] = []
     private(set) var state: LoadingState = .idle
+    private(set) var currentDate: Date = Date()
 
-    var onStateChange: ((LoadingState) -> Void)?
+    var onUpdate: (() -> Void)?
 
     init(calendarService: CalendarService = CalendarService()) {
         self.calendarService = calendarService
     }
 
-    func loadEvents() {
+    func loadDay(_ date: Date) {
+        currentDate = date
         state = .loading
-        onStateChange?(.loading)
+        onUpdate?()
 
         Task {
             let granted = await calendarService.requestAccess()
@@ -48,19 +51,20 @@ final class CalendarViewModel {
             guard granted else {
                 await MainActor.run {
                     state = .permissionDenied
-                    onStateChange?(.permissionDenied)
+                    onUpdate?()
                 }
                 return
             }
 
-            let now = Date()
-            let weekLater = Calendar.current.date(byAdding: .day, value: 7, to: now)!
-            let fetchedEvents = calendarService.fetchEvents(from: now, to: weekLater)
+            let dayStart = Calendar.current.startOfDay(for: date)
+            let dayEnd = Calendar.current.date(byAdding: .day, value: 1, to: dayStart)!
+            let events = calendarService.fetchEvents(from: dayStart, to: dayEnd)
+            let slots = dayBuilder.buildSlots(for: date, with: events)
 
             await MainActor.run {
-                events = fetchedEvents
+                timeSlots = slots
                 state = .loaded
-                onStateChange?(.loaded)
+                onUpdate?()
             }
         }
     }
