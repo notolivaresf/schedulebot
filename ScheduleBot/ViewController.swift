@@ -24,6 +24,15 @@ class ViewController: UIViewController {
             calendarColor: .systemBlue
         )
         print("✓ Phase 2: Created event - \(mockEvent.title)")
+
+        // Phase 3 verification: test CalendarService permission request
+        let calendarService = CalendarService()
+        print("✓ Phase 3: Authorization status = \(calendarService.authorizationStatus.rawValue)")
+
+        Task {
+            let granted = await calendarService.requestAccess()
+            print("✓ Phase 3: Calendar access granted = \(granted)")
+        }
     }
 
 
