@@ -11,25 +11,54 @@ class ViewController: UIViewController {
 
     private let viewModel = CalendarViewModel()
 
+    private let tableView: UITableView = {
+        let table = UITableView(frame: .zero, style: .plain)
+        table.translatesAutoresizingMaskIntoConstraints = false
+        table.rowHeight = 44
+        return table
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Phase 5: Use ViewModel to manage state
-        viewModel.onStateChange = { [weak self] state in
-            print("✓ Phase 5: State changed to \(state)")
-
-            if state == .loaded {
-                guard let self = self else { return }
-                print("✓ Phase 5: Loaded \(self.viewModel.events.count) events")
-                for event in self.viewModel.events {
-                    print("  - \(event.title) (\(event.calendarTitle))")
-                }
-            }
-        }
-
-        viewModel.loadEvents()
+        setupTableView()
+        bindViewModel()
+        viewModel.loadDay(Date())
     }
 
+    private func setupTableView() {
+        view.addSubview(tableView)
 
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
+
+        tableView.register(TimeSlotCell.self, forCellReuseIdentifier: TimeSlotCell.reuseIdentifier)
+        tableView.dataSource = self
+    }
+
+    private func bindViewModel() {
+        viewModel.onUpdate = { [weak self] in
+            self?.tableView.reloadData()
+        }
+    }
 }
 
+extension ViewController: UITableViewDataSource {
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModel.timeSlots.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: TimeSlotCell.reuseIdentifier, for: indexPath) as? TimeSlotCell else {
+            return UITableViewCell()
+        }
+
+        let slot = viewModel.timeSlots[indexPath.row]
+        cell.configure(with: slot)
+        return cell
+    }
+}
