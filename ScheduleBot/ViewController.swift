@@ -11,8 +11,17 @@ class ViewController: UIViewController {
 
     private let viewModel = CalendarViewModel()
     private let highlightColor: UIColor
-    private var selectedSlotIndices: Set<Int> = []
+    private var selectedSlotsByDate: [Date: Set<Int>] = [:]
     private var shareButton: UIBarButtonItem!
+
+    private var currentDayKey: Date {
+        Calendar.current.startOfDay(for: viewModel.currentDate)
+    }
+
+    private var currentDaySelections: Set<Int> {
+        get { selectedSlotsByDate[currentDayKey] ?? [] }
+        set { selectedSlotsByDate[currentDayKey] = newValue }
+    }
 
     init(highlightColor: UIColor = .systemBlue) {
         self.highlightColor = highlightColor
@@ -81,19 +90,26 @@ class ViewController: UIViewController {
     }
 
     @objc private func shareTapped() {
-        let selectedSlots = selectedSlotIndices.sorted().compactMap { index -> TimeSlot? in
-            guard index < viewModel.timeSlots.count else { return nil }
-            return viewModel.timeSlots[index]
-        }
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
 
         print("Selected slots:")
-        for slot in selectedSlots {
-            print("  \(slot.timeString) - \(slot.startTime) to \(slot.endTime)")
+        for (date, slotIndices) in selectedSlotsByDate.sorted(by: { $0.key < $1.key }) {
+            guard !slotIndices.isEmpty else { continue }
+            print("  \(dateFormatter.string(from: date)):")
+            for index in slotIndices.sorted() {
+                let slotStart = date.addingTimeInterval(Double(index) * 30 * 60)
+                let slotEnd = slotStart.addingTimeInterval(30 * 60)
+                let timeFormatter = DateFormatter()
+                timeFormatter.timeStyle = .short
+                print("    \(timeFormatter.string(from: slotStart)) - \(timeFormatter.string(from: slotEnd))")
+            }
         }
     }
 
     private func updateShareButtonState() {
-        shareButton.isEnabled = !selectedSlotIndices.isEmpty
+        let hasAnySelection = selectedSlotsByDate.values.contains { !$0.isEmpty }
+        shareButton.isEnabled = hasAnySelection
     }
 
     private func setupTableView() {
@@ -115,7 +131,6 @@ class ViewController: UIViewController {
         viewModel.onUpdate = { [weak self] in
             guard let self = self else { return }
             self.title = self.dateFormatter.string(from: self.viewModel.currentDate)
-            self.selectedSlotIndices.removeAll()
             self.tableView.reloadData()
             self.updateShareButtonState()
         }
@@ -134,7 +149,7 @@ extension ViewController: UITableViewDataSource {
         }
 
         let slot = viewModel.timeSlots[indexPath.row]
-        let isSelected = selectedSlotIndices.contains(indexPath.row)
+        let isSelected = currentDaySelections.contains(indexPath.row)
         cell.configure(with: slot, isSelected: isSelected, highlightColor: highlightColor)
         return cell
     }
@@ -149,11 +164,13 @@ extension ViewController: UITableViewDelegate {
         guard case .available = slot.content else { return }
 
         // Toggle selection
-        if selectedSlotIndices.contains(indexPath.row) {
-            selectedSlotIndices.remove(indexPath.row)
+        var selections = currentDaySelections
+        if selections.contains(indexPath.row) {
+            selections.remove(indexPath.row)
         } else {
-            selectedSlotIndices.insert(indexPath.row)
+            selections.insert(indexPath.row)
         }
+        currentDaySelections = selections
 
         // Reload the cell to update its appearance
         tableView.reloadRows(at: [indexPath], with: .none)
