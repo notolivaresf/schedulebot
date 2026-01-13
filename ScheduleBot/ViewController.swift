@@ -12,6 +12,7 @@ class ViewController: UIViewController {
     private let viewModel = CalendarViewModel()
     private let highlightColor: UIColor
     private var selectedSlotIndices: Set<Int> = []
+    private var shareButton: UIBarButtonItem!
 
     init(highlightColor: UIColor = .systemBlue) {
         self.highlightColor = highlightColor
@@ -57,7 +58,16 @@ class ViewController: UIViewController {
             target: self,
             action: #selector(nextDayTapped)
         )
-        navigationItem.rightBarButtonItems = [nextButton, previousButton]
+        navigationItem.leftBarButtonItems = [previousButton, nextButton]
+
+        shareButton = UIBarButtonItem(
+            title: "Share",
+            style: .plain,
+            target: self,
+            action: #selector(shareTapped)
+        )
+        shareButton.isEnabled = false
+        navigationItem.rightBarButtonItem = shareButton
     }
 
     @objc private func previousDayTapped() {
@@ -68,6 +78,22 @@ class ViewController: UIViewController {
     @objc private func nextDayTapped() {
         let nextDay = Calendar.current.date(byAdding: .day, value: 1, to: viewModel.currentDate)!
         viewModel.loadDay(nextDay)
+    }
+
+    @objc private func shareTapped() {
+        let selectedSlots = selectedSlotIndices.sorted().compactMap { index -> TimeSlot? in
+            guard index < viewModel.timeSlots.count else { return nil }
+            return viewModel.timeSlots[index]
+        }
+
+        print("Selected slots:")
+        for slot in selectedSlots {
+            print("  \(slot.timeString) - \(slot.startTime) to \(slot.endTime)")
+        }
+    }
+
+    private func updateShareButtonState() {
+        shareButton.isEnabled = !selectedSlotIndices.isEmpty
     }
 
     private func setupTableView() {
@@ -91,6 +117,7 @@ class ViewController: UIViewController {
             self.title = self.dateFormatter.string(from: self.viewModel.currentDate)
             self.selectedSlotIndices.removeAll()
             self.tableView.reloadData()
+            self.updateShareButtonState()
         }
     }
 }
@@ -130,5 +157,6 @@ extension ViewController: UITableViewDelegate {
 
         // Reload the cell to update its appearance
         tableView.reloadRows(at: [indexPath], with: .none)
+        updateShareButtonState()
     }
 }
