@@ -25,13 +25,24 @@ class ViewController: UIViewController {
         )
         print("✓ Phase 2: Created event - \(mockEvent.title)")
 
-        // Phase 3 verification: test CalendarService permission request
+        // Phase 3 & 4 verification: test CalendarService
         let calendarService = CalendarService()
         print("✓ Phase 3: Authorization status = \(calendarService.authorizationStatus.rawValue)")
 
         Task {
             let granted = await calendarService.requestAccess()
             print("✓ Phase 3: Calendar access granted = \(granted)")
+
+            if granted {
+                // Phase 4: Fetch events for the next 7 days
+                let now = Date()
+                let weekLater = Calendar.current.date(byAdding: .day, value: 7, to: now)!
+                let events = calendarService.fetchEvents(from: now, to: weekLater)
+                print("✓ Phase 4: Found \(events.count) events")
+                for event in events {
+                    print("  - \(event.title) (\(event.calendarTitle))")
+                }
+            }
         }
     }
 
