@@ -9,41 +9,25 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    private let viewModel = CalendarViewModel()
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Phase 2 verification: test CalendarEvent struct
-        let mockEvent = CalendarEvent(
-            id: "test-123",
-            title: "Test Event",
-            startDate: Date(),
-            endDate: Date().addingTimeInterval(3600),
-            isAllDay: false,
-            location: "Office",
-            calendarTitle: "Work",
-            calendarColor: .systemBlue
-        )
-        print("✓ Phase 2: Created event - \(mockEvent.title)")
+        // Phase 5: Use ViewModel to manage state
+        viewModel.onStateChange = { [weak self] state in
+            print("✓ Phase 5: State changed to \(state)")
 
-        // Phase 3 & 4 verification: test CalendarService
-        let calendarService = CalendarService()
-        print("✓ Phase 3: Authorization status = \(calendarService.authorizationStatus.rawValue)")
-
-        Task {
-            let granted = await calendarService.requestAccess()
-            print("✓ Phase 3: Calendar access granted = \(granted)")
-
-            if granted {
-                // Phase 4: Fetch events for the next 7 days
-                let now = Date()
-                let weekLater = Calendar.current.date(byAdding: .day, value: 7, to: now)!
-                let events = calendarService.fetchEvents(from: now, to: weekLater)
-                print("✓ Phase 4: Found \(events.count) events")
-                for event in events {
+            if state == .loaded {
+                guard let self = self else { return }
+                print("✓ Phase 5: Loaded \(self.viewModel.events.count) events")
+                for event in self.viewModel.events {
                     print("  - \(event.title) (\(event.calendarTitle))")
                 }
             }
         }
+
+        viewModel.loadEvents()
     }
 
 
