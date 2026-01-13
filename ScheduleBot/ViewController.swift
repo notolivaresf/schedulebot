@@ -13,18 +13,14 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
 
-        // Phase 2 verification: test CalendarEvent struct
-        let mockEvent = CalendarEvent(
-            id: "test-123",
-            title: "Test Event",
-            startDate: Date(),
-            endDate: Date().addingTimeInterval(3600),
-            isAllDay: false,
-            location: "Office",
-            calendarTitle: "Work",
-            calendarColor: .systemBlue
-        )
-        print("✓ Created event: \(mockEvent.title)")
+        // Phase 3 verification: test CalendarService permission request
+        let calendarService = CalendarService()
+        print("Current authorization status: \(calendarService.authorizationStatus.rawValue)")
+
+        Task {
+            let granted = await calendarService.requestAccess()
+            print("✓ Calendar access granted: \(granted)")
+        }
     }
 }
 
