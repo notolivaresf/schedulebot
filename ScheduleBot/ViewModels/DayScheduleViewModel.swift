@@ -98,6 +98,13 @@ final class DayScheduleViewModel {
         return result
     }
 
+    func groupedSelections() -> [DateSelection] {
+        selectedSlotsByDate
+            .filter { !$0.value.isEmpty }
+            .sorted { $0.key < $1.key }
+            .map { DateSelection(id: $0.key, date: $0.key, slotCount: $0.value.count) }
+    }
+
     // MARK: - Navigation
 
     func goToPreviousDay() {

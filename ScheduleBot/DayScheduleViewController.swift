@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 class DayScheduleViewController: UIViewController {
 
@@ -19,6 +20,9 @@ class DayScheduleViewController: UIViewController {
         table.rowHeight = 44
         return table
     }()
+
+    private var footerHostingController: UIHostingController<SelectedDatesFooterView>?
+    private var footerHeightConstraint: NSLayoutConstraint?
 
     // MARK: - Initialization
 
@@ -38,6 +42,7 @@ class DayScheduleViewController: UIViewController {
         super.viewDidLoad()
         setupNavigationBar()
         setupTableView()
+        setupFooter()
         bindViewModel()
         viewModel.loadDay(Date())
     }
@@ -71,17 +76,40 @@ class DayScheduleViewController: UIViewController {
 
     private func setupTableView() {
         view.addSubview(tableView)
+        tableView.register(TimeSlotCell.self, forCellReuseIdentifier: TimeSlotCell.reuseIdentifier)
+        tableView.dataSource = self
+        tableView.delegate = self
+    }
+
+    private func setupFooter() {
+        let footerView = SelectedDatesFooterView(
+            selections: [],
+            highlightColor: Color(highlightColor)
+        )
+        let hostingController = UIHostingController(rootView: footerView)
+        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+        hostingController.view.backgroundColor = .systemBackground
+
+        addChild(hostingController)
+        view.addSubview(hostingController.view)
+        hostingController.didMove(toParent: self)
+
+        let heightConstraint = hostingController.view.heightAnchor.constraint(equalToConstant: 0)
 
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            tableView.bottomAnchor.constraint(equalTo: hostingController.view.topAnchor),
+
+            hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            hostingController.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            heightConstraint,
         ])
 
-        tableView.register(TimeSlotCell.self, forCellReuseIdentifier: TimeSlotCell.reuseIdentifier)
-        tableView.dataSource = self
-        tableView.delegate = self
+        footerHostingController = hostingController
+        footerHeightConstraint = heightConstraint
     }
 
     private func bindViewModel() {
@@ -90,7 +118,27 @@ class DayScheduleViewController: UIViewController {
             title = viewModel.formattedTitle
             shareButton.isEnabled = viewModel.hasAnySelection
             tableView.reloadData()
+            updateFooter()
             scrollToDefaultTime()
+        }
+    }
+
+    private func updateFooter() {
+        let selections = viewModel.groupedSelections()
+        let hasSelections = !selections.isEmpty
+
+        footerHostingController?.rootView = SelectedDatesFooterView(
+            selections: selections,
+            highlightColor: Color(highlightColor)
+        )
+
+        let newHeight: CGFloat = hasSelections ? 56 : 0
+
+        guard footerHeightConstraint?.constant != newHeight else { return }
+
+        UIView.animate(withDuration: 0.25) {
+            self.footerHeightConstraint?.constant = newHeight
+            self.view.layoutIfNeeded()
         }
     }
 
@@ -161,5 +209,6 @@ extension DayScheduleViewController: UITableViewDelegate {
         viewModel.toggleSelection(at: indexPath.row)
         tableView.reloadRows(at: [indexPath], with: .none)
         shareButton.isEnabled = viewModel.hasAnySelection
+        updateFooter()
     }
 }
