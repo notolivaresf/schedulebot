@@ -8,7 +8,9 @@
       "Bash(bin/rails db:migrate:*)",
       "Bash(server/bin/rails generate controller Schedules show --skip-routes)",
       "Bash(bash -c:*)",
-      "Bash(bin/rails generate:*)"
+      "Bash(bin/rails generate:*)",
+      "Bash(bin/rails server:*)",
+      "Bash(curl:*)"
     ]
   }
 }
