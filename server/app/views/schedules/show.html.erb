@@ -6,8 +6,8 @@
   <div class="slots-list">
     <% @schedule.slots.each do |slot| %>
       <div class="slot-card">
-        <div class="slot-date"><%= slot["date"] %></div>
-        <div class="slot-time"><%= slot["startTime"] %> - <%= slot["endTime"] %></div>
+        <div class="slot-date"><%= format_slot_date(slot["date"]) %></div>
+        <div class="slot-time"><%= format_slot_time_range(slot["startTime"], slot["endTime"]) %></div>
       </div>
     <% end %>
   </div>
