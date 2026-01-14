@@ -4,7 +4,8 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(ruby --version:*)",
-      "Bash(rails:*)"
+      "Bash(rails:*)",
+      "Bash(bin/rails db:migrate:*)"
     ]
   }
 }
