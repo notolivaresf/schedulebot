@@ -151,9 +151,40 @@
     actionButtons.style.display = 'none';
   });
 
-  // Done button - will be wired up in next commit
-  doneBtn.addEventListener('click', function() {
-    console.log('Selected slots:', Array.from(selectedSlots));
-    // TODO: Submit to server
+  // Done button - submit selection to server
+  doneBtn.addEventListener('click', async function() {
+    // Get schedule ID from URL
+    const scheduleId = window.location.pathname.split('/').pop();
+
+    // Build array of selected slot objects
+    const selectedSlotData = Array.from(selectedSlots).map(index => {
+      const card = document.querySelector(`[data-slot-index="${index}"]`);
+      return {
+        date: card.dataset.slotDate,
+        startTime: card.dataset.slotStart,
+        endTime: card.dataset.slotEnd
+      };
+    });
+
+    try {
+      const response = await fetch(`/schedules/${scheduleId}/select`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ selected_slots: selectedSlotData })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        window.location.href = data.redirect_url;
+      } else {
+        alert('Error: ' + data.errors.join(', '));
+      }
+    } catch (error) {
+      alert('Error submitting selection. Please try again.');
+      console.error(error);
+    }
   });
 </script>
