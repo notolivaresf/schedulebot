@@ -99,14 +99,44 @@ final class DayScheduleViewModel {
     }
 
     func slotChipData() -> [SlotChipData] {
-        allSelectedSlots().map { slot in
-            SlotChipData(
-                id: "\(slot.date.timeIntervalSince1970)-\(slot.slotIndex)",
-                date: slot.date,
-                startTime: slot.startTime,
-                endTime: slot.endTime
-            )
+        var result: [SlotChipData] = []
+
+        for (date, indices) in selectedSlotsByDate.sorted(by: { $0.key < $1.key }) {
+            let sortedIndices = indices.sorted()
+            guard !sortedIndices.isEmpty else { continue }
+
+            var rangeStart = sortedIndices[0]
+            var rangeEnd = sortedIndices[0]
+
+            for i in 1..<sortedIndices.count {
+                let current = sortedIndices[i]
+                if current == rangeEnd + 1 {
+                    // Contiguous, extend the range
+                    rangeEnd = current
+                } else {
+                    // Gap found, emit current range and start new one
+                    result.append(makeChipData(date: date, startIndex: rangeStart, endIndex: rangeEnd))
+                    rangeStart = current
+                    rangeEnd = current
+                }
+            }
+
+            // Emit final range
+            result.append(makeChipData(date: date, startIndex: rangeStart, endIndex: rangeEnd))
         }
+
+        return result
+    }
+
+    private func makeChipData(date: Date, startIndex: Int, endIndex: Int) -> SlotChipData {
+        let startTime = date.addingTimeInterval(Double(startIndex) * 30 * 60)
+        let endTime = date.addingTimeInterval(Double(endIndex + 1) * 30 * 60)
+        return SlotChipData(
+            id: "\(date.timeIntervalSince1970)-\(startIndex)-\(endIndex)",
+            date: date,
+            startTime: startTime,
+            endTime: endTime
+        )
     }
 
     // MARK: - Navigation
