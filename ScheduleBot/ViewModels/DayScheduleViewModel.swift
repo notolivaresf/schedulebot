@@ -139,6 +139,17 @@ final class DayScheduleViewModel {
         )
     }
 
+    // MARK: - Sharing
+
+    func shareableSchedule() -> ShareableSchedule {
+        let chips = slotChipData()
+        let slots = chips.map { chip in
+            ShareableSlot(date: chip.date, startTime: chip.startTime, endTime: chip.endTime)
+        }
+        let timezone = TimeZone.current.identifier
+        return ShareableSchedule(slots: slots, timezone: timezone)
+    }
+
     // MARK: - Navigation
 
     func goToPreviousDay() {
