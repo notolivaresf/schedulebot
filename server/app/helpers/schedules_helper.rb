@@ -1,7 +1,7 @@
 module SchedulesHelper
   def format_slot_date(date_string)
     date = Date.parse(date_string)
-    date.strftime("%b/%-d/%Y")
+    date.strftime("%A, %B %-d, %Y")
   end
 
   def format_slot_time_range(start_time, end_time)
