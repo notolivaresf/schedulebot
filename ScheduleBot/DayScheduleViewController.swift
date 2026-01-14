@@ -159,24 +159,19 @@ class DayScheduleViewController: UIViewController {
     }
 
     @objc private func shareTapped() {
-        let selectedSlots = viewModel.allSelectedSlots()
-        printSelectedSlots(selectedSlots)
-    }
+        let schedule = viewModel.shareableSchedule()
 
-    private func printSelectedSlots(_ slots: [SelectedSlot]) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        let timeFormatter = DateFormatter()
-        timeFormatter.timeStyle = .short
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
 
-        print("Selected slots:")
-        var currentDate: Date?
-        for slot in slots {
-            if slot.date != currentDate {
-                currentDate = slot.date
-                print("  \(dateFormatter.string(from: slot.date)):")
+        do {
+            let jsonData = try encoder.encode(schedule)
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                print("Share payload:")
+                print(jsonString)
             }
-            print("    \(timeFormatter.string(from: slot.startTime)) - \(timeFormatter.string(from: slot.endTime))")
+        } catch {
+            print("Failed to encode schedule: \(error)")
         }
     }
 }
