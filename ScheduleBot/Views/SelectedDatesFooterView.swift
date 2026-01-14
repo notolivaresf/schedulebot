@@ -18,14 +18,8 @@ struct SlotChipData: Identifiable {
         let startStr = Self.timeFormatter.string(from: startTime)
         let endStr = Self.timeFormatter.string(from: endTime)
 
-        // Single 30-min slot: "Jan 13 9:00 AM"
-        // Multi-slot range: "Jan 13 9:00 - 10:30 AM"
-        let duration = endTime.timeIntervalSince(startTime)
-        if duration <= 30 * 60 {
-            return "\(dateStr) \(startStr)"
-        } else {
-            return "\(dateStr) \(startStr) - \(endStr)"
-        }
+        // Always show full time range: "Jan 13 9:00 - 9:30 AM"
+        return "\(dateStr) \(startStr) - \(endStr)"
     }
 
     private static let dateFormatter: DateFormatter = {
