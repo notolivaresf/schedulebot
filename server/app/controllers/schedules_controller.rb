@@ -22,10 +22,14 @@ class SchedulesController < ApplicationController
     @schedule = Schedule.find(params[:id])
 
     if @schedule.update(selected_slots: params[:selected_slots], status: :confirmed)
-      render json: { success: true, redirect_url: schedule_confirmation_path(@schedule) }
+      render json: { success: true, redirect_url: confirmation_schedule_path(@schedule) }
     else
       render json: { errors: @schedule.errors.full_messages }, status: :unprocessable_entity
     end
+  end
+
+  def confirmation
+    @schedule = Schedule.find(params[:id])
   end
 
   private
