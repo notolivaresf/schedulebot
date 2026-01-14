@@ -4,12 +4,21 @@
   <p class="timezone">Timezone: <%= @schedule.timezone %></p>
 
   <div class="slots-list">
-    <% @schedule.slots.each do |slot| %>
-      <div class="slot-card">
+    <% @schedule.slots.each_with_index do |slot, index| %>
+      <div class="slot-card"
+           data-slot-index="<%= index %>"
+           data-slot-date="<%= slot["date"] %>"
+           data-slot-start="<%= slot["startTime"] %>"
+           data-slot-end="<%= slot["endTime"] %>">
         <div class="slot-date"><%= format_slot_date(slot["date"]) %></div>
         <div class="slot-time"><%= format_slot_time_range(slot["startTime"], slot["endTime"]) %></div>
       </div>
     <% end %>
+  </div>
+
+  <div class="action-buttons" id="actionButtons" style="display: none;">
+    <button class="btn btn-cancel" id="cancelBtn">Cancel</button>
+    <button class="btn btn-done" id="doneBtn">Done</button>
   </div>
 </div>
 
@@ -40,9 +49,21 @@
 
   .slot-card {
     background-color: #f8f9fa;
-    border: 1px solid #e9ecef;
+    border: 2px solid #e9ecef;
     border-radius: 8px;
     padding: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .slot-card:hover {
+    border-color: #007bff;
+    background-color: #fff;
+  }
+
+  .slot-card.selected {
+    background-color: #e7f3ff;
+    border-color: #007bff;
   }
 
   .slot-date {
@@ -54,4 +75,85 @@
     color: #666;
     font-size: 0.875rem;
   }
+
+  .action-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e9ecef;
+  }
+
+  .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+  }
+
+  .btn-cancel {
+    background-color: #6c757d;
+    color: white;
+  }
+
+  .btn-cancel:hover {
+    background-color: #5a6268;
+  }
+
+  .btn-done {
+    background-color: #007bff;
+    color: white;
+  }
+
+  .btn-done:hover {
+    background-color: #0056b3;
+  }
 </style>
+
+<script>
+  const selectedSlots = new Set();
+  const actionButtons = document.getElementById('actionButtons');
+  const cancelBtn = document.getElementById('cancelBtn');
+  const doneBtn = document.getElementById('doneBtn');
+
+  // Add click handlers to all slot cards
+  document.querySelectorAll('.slot-card').forEach(card => {
+    card.addEventListener('click', function() {
+      const index = this.dataset.slotIndex;
+
+      if (selectedSlots.has(index)) {
+        selectedSlots.delete(index);
+        this.classList.remove('selected');
+      } else {
+        selectedSlots.add(index);
+        this.classList.add('selected');
+      }
+
+      // Show/hide action buttons based on selection
+      if (selectedSlots.size > 0) {
+        actionButtons.style.display = 'flex';
+      } else {
+        actionButtons.style.display = 'none';
+      }
+    });
+  });
+
+  // Cancel button - deselect all
+  cancelBtn.addEventListener('click', function() {
+    selectedSlots.clear();
+    document.querySelectorAll('.slot-card').forEach(card => {
+      card.classList.remove('selected');
+    });
+    actionButtons.style.display = 'none';
+  });
+
+  // Done button - will be wired up in next commit
+  doneBtn.addEventListener('click', function() {
+    console.log('Selected slots:', Array.from(selectedSlots));
+    // TODO: Submit to server
+  });
+</script>
