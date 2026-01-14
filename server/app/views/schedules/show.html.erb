@@ -1,2 +1,145 @@
-<h1>Schedules#show</h1>
-<p>Find me in app/views/schedules/show.html.erb</p>
+<div class="schedule-container">
+  <% if notice.present? %>
+    <div class="notice <%= @schedule.confirmed? ? 'notice-success' : 'notice-info' %>">
+      <%= notice %>
+    </div>
+  <% end %>
+
+  <h1>Proposed Schedule</h1>
+
+  <div class="status-badge status-<%= @schedule.status %>">
+    <%= @schedule.status.capitalize %>
+  </div>
+
+  <p class="timezone">Timezone: <%= @schedule.timezone %></p>
+
+  <div class="slots-list">
+    <% @schedule.slots.each do |slot| %>
+      <div class="slot-card">
+        <div class="slot-date"><%= slot["date"] %></div>
+        <div class="slot-time"><%= slot["startTime"] %> - <%= slot["endTime"] %></div>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @schedule.pending? %>
+    <div class="actions">
+      <%= button_to "Confirm", confirm_schedule_path(@schedule), method: :post, class: "btn btn-confirm" %>
+      <%= button_to "Reject", reject_schedule_path(@schedule), method: :post, class: "btn btn-reject" %>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  .schedule-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  h1 {
+    margin-bottom: 1rem;
+    color: #333;
+  }
+
+  .notice {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+  }
+
+  .notice-success {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  .notice-info {
+    background-color: #e2e3e5;
+    color: #383d41;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+
+  .status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+
+  .status-confirmed {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  .status-rejected {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+
+  .timezone {
+    color: #666;
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .slots-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .slot-card {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1rem;
+  }
+
+  .slot-date {
+    font-weight: 600;
+    color: #333;
+  }
+
+  .slot-time {
+    color: #666;
+    font-size: 0.875rem;
+  }
+
+  .actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .btn {
+    flex: 1;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .btn:hover {
+    opacity: 0.9;
+  }
+
+  .btn-confirm {
+    background-color: #28a745;
+    color: white;
+  }
+
+  .btn-reject {
+    background-color: #dc3545;
+    color: white;
+  }
+</style>
