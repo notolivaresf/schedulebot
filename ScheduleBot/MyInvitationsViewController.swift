@@ -82,6 +82,9 @@ final class MyInvitationsViewController: UIViewController {
         // Get stored schedule IDs
         let storedIDs = UserDefaults.standard.array(forKey: "scheduleIDs") as? [Int] ?? []
 
+        // Keep track of previous statuses
+        let previousStatuses = Dictionary(uniqueKeysWithValues: invitations.map { ($0.id, $0.status) })
+
         Task {
             var fetchedInvitations: [Schedule] = []
 
@@ -95,10 +98,35 @@ final class MyInvitationsViewController: UIViewController {
             }
 
             await MainActor.run {
+                // Check for newly confirmed invitations
+                for schedule in fetchedInvitations {
+                    if let previousStatus = previousStatuses[schedule.id],
+                       previousStatus == "pending",
+                       schedule.status == "confirmed" {
+                        showConfirmationAlert(for: schedule)
+                    }
+                }
+
                 invitations = fetchedInvitations.sorted { $0.id > $1.id } // Newest first
                 tableView.reloadData()
             }
         }
+    }
+
+    private func showConfirmationAlert(for schedule: Schedule) {
+        let slotsText = schedule.selectedSlots?.compactMap { slot in
+            "\(slot.date) \(slot.startTime)"
+        }.joined(separator: ", ") ?? "Unknown"
+
+        let alert = UIAlertController(
+            title: "Time Slot Confirmed!",
+            message: "Your invitee selected:\n\(slotsText)",
+            preferredStyle: .alert
+        )
+
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+
+        present(alert, animated: true)
     }
 
     private func setupTableView() {
