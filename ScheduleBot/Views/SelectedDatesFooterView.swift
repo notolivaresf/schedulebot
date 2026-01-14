@@ -16,10 +16,9 @@ struct SlotChipData: Identifiable {
     var formattedLabel: String {
         let dateStr = Self.dateFormatter.string(from: date)
         let startStr = Self.timeFormatter.string(from: startTime)
-        let endStr = Self.timeFormatter.string(from: endTime)
 
-        // Always show full time range: "Jan 13 9:00 - 9:30 AM"
-        return "\(dateStr) \(startStr) - \(endStr)"
+        // Show only start time: "Jan 13 9:00 AM"
+        return "\(dateStr) \(startStr)"
     }
 
     private static let dateFormatter: DateFormatter = {
