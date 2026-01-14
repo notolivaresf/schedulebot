@@ -18,18 +18,6 @@ class SchedulesController < ApplicationController
     end
   end
 
-  def confirm
-    @schedule = Schedule.find(params[:id])
-    @schedule.confirmed!
-    redirect_to @schedule, notice: "Schedule confirmed!"
-  end
-
-  def reject
-    @schedule = Schedule.find(params[:id])
-    @schedule.rejected!
-    redirect_to @schedule, notice: "Schedule rejected."
-  end
-
   private
 
   def schedule_params
