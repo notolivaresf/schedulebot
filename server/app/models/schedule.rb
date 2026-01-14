@@ -4,4 +4,5 @@ class Schedule < ApplicationRecord
   validates :slots, presence: true
   validates :timezone, presence: true
   validates :status, presence: true
+  validates :selected_slots, presence: true, if: -> { status == "confirmed" }
 end
