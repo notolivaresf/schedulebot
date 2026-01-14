@@ -18,6 +18,7 @@ final class MyInvitationsViewController: UIViewController {
 
     private let scheduleService = ScheduleService()
     private var invitations: [Schedule] = []
+    private var pollingTimer: Timer?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +31,18 @@ final class MyInvitationsViewController: UIViewController {
         setupNotifications()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        startPolling()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        stopPolling()
+    }
+
     deinit {
+        stopPolling()
         NotificationCenter.default.removeObserver(self)
     }
 
@@ -47,6 +59,23 @@ final class MyInvitationsViewController: UIViewController {
     @objc private func appDidBecomeActive() {
         print("App became active - checking for invitation updates")
         loadInvitations()
+        startPolling()
+    }
+
+    private func startPolling() {
+        // Stop existing timer if any
+        stopPolling()
+
+        // Start new timer - check every 30 seconds
+        pollingTimer = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: true) { [weak self] _ in
+            print("Polling for invitation updates...")
+            self?.loadInvitations()
+        }
+    }
+
+    private func stopPolling() {
+        pollingTimer?.invalidate()
+        pollingTimer = nil
     }
 
     private func loadInvitations() {
