@@ -27,6 +27,26 @@ final class MyInvitationsViewController: UIViewController {
 
         setupTableView()
         loadInvitations()
+        setupNotifications()
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    private func setupNotifications() {
+        // Listen for app coming to foreground
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(appDidBecomeActive),
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil
+        )
+    }
+
+    @objc private func appDidBecomeActive() {
+        print("App became active - checking for invitation updates")
+        loadInvitations()
     }
 
     private func loadInvitations() {
