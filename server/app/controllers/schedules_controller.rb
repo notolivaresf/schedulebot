@@ -3,6 +3,11 @@ class SchedulesController < ApplicationController
 
   def show
     @schedule = Schedule.find(params[:id])
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @schedule }
+    end
   end
 
   def create

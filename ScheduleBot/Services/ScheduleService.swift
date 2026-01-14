@@ -39,6 +39,26 @@ final class ScheduleService {
 
         return try JSONDecoder().decode(ScheduleResponse.self, from: data)
     }
+
+    func fetchSchedule(id: Int) async throws -> Schedule {
+        let url = baseURL.appendingPathComponent("schedules").appendingPathComponent("\(id)")
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+
+        let (data, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw ScheduleServiceError.invalidResponse
+        }
+
+        guard httpResponse.statusCode == 200 else {
+            throw ScheduleServiceError.serverError(statusCode: httpResponse.statusCode)
+        }
+
+        return try JSONDecoder().decode(Schedule.self, from: data)
+    }
 }
 
 enum ScheduleServiceError: Error, LocalizedError {
