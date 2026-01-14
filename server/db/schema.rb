@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_14_040819) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_14_204400) do
   create_table "schedules", force: :cascade do |t|
     t.json "slots"
     t.string "timezone"
     t.string "status", default: "pending", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.json "selected_slots"
   end
 end
