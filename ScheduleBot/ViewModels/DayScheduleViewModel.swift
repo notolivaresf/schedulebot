@@ -103,26 +103,11 @@ final class DayScheduleViewModel {
 
         for (date, indices) in selectedSlotsByDate.sorted(by: { $0.key < $1.key }) {
             let sortedIndices = indices.sorted()
-            guard !sortedIndices.isEmpty else { continue }
 
-            var rangeStart = sortedIndices[0]
-            var rangeEnd = sortedIndices[0]
-
-            for i in 1..<sortedIndices.count {
-                let current = sortedIndices[i]
-                if current == rangeEnd + 1 {
-                    // Contiguous, extend the range
-                    rangeEnd = current
-                } else {
-                    // Gap found, emit current range and start new one
-                    result.append(makeChipData(date: date, startIndex: rangeStart, endIndex: rangeEnd))
-                    rangeStart = current
-                    rangeEnd = current
-                }
+            // Create one chip per slot, even if continuous
+            for index in sortedIndices {
+                result.append(makeChipData(date: date, startIndex: index, endIndex: index))
             }
-
-            // Emit final range
-            result.append(makeChipData(date: date, startIndex: rangeStart, endIndex: rangeEnd))
         }
 
         return result
