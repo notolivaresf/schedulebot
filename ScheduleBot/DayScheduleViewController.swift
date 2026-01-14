@@ -168,8 +168,14 @@ class DayScheduleViewController: UIViewController {
             do {
                 let response = try await scheduleService.postSchedule(schedule)
                 await MainActor.run {
+                    // Store schedule ID locally
+                    var storedIDs = UserDefaults.standard.array(forKey: "scheduleIDs") as? [Int] ?? []
+                    storedIDs.append(response.id)
+                    UserDefaults.standard.set(storedIDs, forKey: "scheduleIDs")
+
                     print("Schedule shared successfully!")
                     print("URL: \(response.url)")
+                    print("Stored schedule ID: \(response.id)")
                 }
             } catch {
                 await MainActor.run {
