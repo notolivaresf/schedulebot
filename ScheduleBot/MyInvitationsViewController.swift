@@ -26,6 +26,30 @@ final class MyInvitationsViewController: UIViewController {
         view.backgroundColor = .systemBackground
 
         setupTableView()
+        loadInvitations()
+    }
+
+    private func loadInvitations() {
+        // Get stored schedule IDs
+        let storedIDs = UserDefaults.standard.array(forKey: "scheduleIDs") as? [Int] ?? []
+
+        Task {
+            var fetchedInvitations: [Schedule] = []
+
+            for id in storedIDs {
+                do {
+                    let schedule = try await scheduleService.fetchSchedule(id: id)
+                    fetchedInvitations.append(schedule)
+                } catch {
+                    print("Failed to fetch schedule \(id): \(error)")
+                }
+            }
+
+            await MainActor.run {
+                invitations = fetchedInvitations.sorted { $0.id > $1.id } // Newest first
+                tableView.reloadData()
+            }
+        }
     }
 
     private func setupTableView() {

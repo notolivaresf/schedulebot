@@ -72,7 +72,15 @@ class DayScheduleViewController: UIViewController {
             action: #selector(shareTapped)
         )
         shareButton.isEnabled = false
-        navigationItem.rightBarButtonItem = shareButton
+
+        let invitationsButton = UIBarButtonItem(
+            title: "Invitations",
+            style: .plain,
+            target: self,
+            action: #selector(invitationsTapped)
+        )
+
+        navigationItem.rightBarButtonItems = [shareButton, invitationsButton]
     }
 
     private func setupTableView() {
@@ -184,6 +192,11 @@ class DayScheduleViewController: UIViewController {
                 }
             }
         }
+    }
+
+    @objc private func invitationsTapped() {
+        let invitationsVC = MyInvitationsViewController()
+        navigationController?.pushViewController(invitationsVC, animated: true)
     }
 }
 
