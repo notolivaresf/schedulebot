@@ -11,6 +11,7 @@ import SwiftUI
 class DayScheduleViewController: UIViewController {
 
     private let viewModel = DayScheduleViewModel()
+    private let scheduleService = ScheduleService()
     private let highlightColor: UIColor
     private var shareButton: UIBarButtonItem!
 
@@ -159,19 +160,23 @@ class DayScheduleViewController: UIViewController {
     }
 
     @objc private func shareTapped() {
+        shareButton.isEnabled = false
+
         let schedule = viewModel.shareableSchedule()
 
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-
-        do {
-            let jsonData = try encoder.encode(schedule)
-            if let jsonString = String(data: jsonData, encoding: .utf8) {
-                print("Share payload:")
-                print(jsonString)
+        Task {
+            do {
+                let response = try await scheduleService.postSchedule(schedule)
+                await MainActor.run {
+                    print("Schedule shared successfully!")
+                    print("URL: \(response.url)")
+                }
+            } catch {
+                await MainActor.run {
+                    print("Failed to share schedule: \(error)")
+                    shareButton.isEnabled = viewModel.hasAnySelection
+                }
             }
-        } catch {
-            print("Failed to encode schedule: \(error)")
         }
     }
 }
