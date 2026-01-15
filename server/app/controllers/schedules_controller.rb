@@ -26,7 +26,12 @@ class SchedulesController < ApplicationController
   def select
     @schedule = Schedule.find(params[:id])
 
-    if @schedule.update(selected_slots: params[:selected_slots], status: :confirmed)
+    update_params = {
+      selected_slots: params[:selected_slots]&.map(&:to_unsafe_h),
+      status: :confirmed
+    }
+
+    if @schedule.update(update_params)
       render json: { success: true, redirect_url: confirmation_schedule_path(@schedule) }
     else
       render json: { errors: @schedule.errors.full_messages }, status: :unprocessable_entity
