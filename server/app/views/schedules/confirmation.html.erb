@@ -6,11 +6,15 @@
   <div class="selected-slots">
     <h2>Selected Time Slots:</h2>
     <div class="slots-list">
-      <% @schedule.selected_slots.each do |slot| %>
-        <div class="slot-card">
-          <div class="slot-date"><%= format_slot_date(slot["date"]) %></div>
-          <div class="slot-time"><%= format_slot_time_range(slot["startTime"], slot["endTime"]) %></div>
-        </div>
+      <% if @schedule.selected_slots.present? %>
+        <% @schedule.selected_slots.each do |slot| %>
+          <div class="slot-card">
+            <div class="slot-date"><%= format_slot_date(slot["date"]) %></div>
+            <div class="slot-time"><%= format_slot_time_range(slot["startTime"], slot["endTime"]) %></div>
+          </div>
+        <% end %>
+      <% else %>
+        <p style="color: #666;">No slots selected</p>
       <% end %>
     </div>
   </div>
